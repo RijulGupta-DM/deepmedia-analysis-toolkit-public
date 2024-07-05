@@ -9,15 +9,15 @@ import random
 
 def extract_info_from_pathnames(file_path):
     values = file_path.split("/")
-    # ['dm-fake-audio-voices-data', 'DMDF_Voices_V2', 'Spanish', 'ElevenLabs', 'ElevenLabs_Vocoder_Custom', 'validation', 'ElevenLabs', 'Ko_fem_spk22_bk1', 'Ko_fem_spk22_bk1Audio_Spanish_Sample38.wav']
+    # ['deepmedia-datasets-public', 'audio-voice-lab', '240705-FB1CD9', 'media', 'raw', 'English', 'DM-Mdl-A1a', 'DM-Vcd-B1a', 'validation_lab', 'DMV12', '2ade70', '6b8be2.wav'] 
 
     dataset_version = values[2]
-    language = values[3]
-    generator_type = values[4]
-    vocoder_type = values[5]
-    dataset_type = values[6]
-    datasource_name = values[7]
-    speaker_name = values[8]
+    language = values[5]
+    generator_type = values[6]
+    vocoder_type = values[7]
+    dataset_type = values[8]
+    datasource_name = values[9]
+    speaker_name = values[10]
 
     # print(dataset_version, language, generator_type, vocoder_type, dataset_name, speaker_name)
     return dataset_version, language, generator_type, vocoder_type, dataset_type, datasource_name, speaker_name
@@ -27,13 +27,13 @@ def load_wav_files(base_dir):
     # wav_files = glob.glob(os.path.join(base_dir, '**', '*.wav'), recursive=True)
 
     # # Filter only validation files
-    # validation_files = [file for file in wav_files if '/validation/' in file]
+    # validation_files = [file for file in wav_files if '/validation_lab/' in file]
 
     validation_files = []
     
     # Use os.walk to traverse the directory structure
     for root, dirs, files in os.walk(base_dir):
-        if 'validation' in root:
+        if 'validation_lab' in root:
             for file in files:
                 if file.endswith('.wav'):
                     validation_files.append(os.path.join(root, file))
@@ -45,7 +45,7 @@ def load_wav_files(base_dir):
     for file_path in validation_files:
         dataset_version, language, generator_type, vocoder_type, dataset_type, datasource_name, speaker_name = extract_info_from_pathnames(file_path)
 
-        if("ljspeech" in speaker_name):
+        if("TIMIT_TTS" in generator_type):
             continue
             
         result_dict = {
@@ -284,8 +284,9 @@ def visualize_data(file_contents_df, output_directory):
         # )
 
 # Define the base directory
-base_dir = 'deepmedia-datasets-public/audio-voice-lab/240602-52933D'
-output_parent_dir = 'visualizations/240602-52933D/dataset'
+# base_dir = 'deepmedia-datasets-public/audio-voice-lab/240602-52933D'
+base_dir = 'deepmedia-datasets-public/audio-voice-lab/240705-FB1CD9/media/raw'
+output_parent_dir = 'visualizations/240705-FB1CD9/dataset'
 
 # Load the wav files
 file_contents = load_wav_files(base_dir)
